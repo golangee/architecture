@@ -1,0 +1,7 @@
+#! {
+    // This document describes metadata for a single context.
+    // Bounded contexts are just folders in your domain folder.
+
+    name "Supportiety Server"
+    description "The supportiety server is responsible for managing support tickets."
+}

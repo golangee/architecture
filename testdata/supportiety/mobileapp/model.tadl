@@ -1,0 +1,3 @@
+#! {
+    // This file contains all model definitions that are only needed in this bounded context.
+}
