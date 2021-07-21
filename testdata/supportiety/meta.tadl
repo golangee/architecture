@@ -2,15 +2,9 @@
     // This document contains some metadata about the domain.
     // You can freely choose if you want to use tadl in text-first or node-first mode,
     // but some modes might feel more natural in some files than others.
+    // See package model for descriptions for fields in this and other files.
 
-    // You *need* to specify a version of architecture to use, but the version may be a wildcard,
-    // which automatically will use the latest version of architecture.
-    // This is according to https://semver.org/ spec.
     arc_version "*"
-
-    // The name for this domain.
     name "Supportiety"
-
-    // A short description for this domain.
     description "A ticketing system for customer support."
 }
