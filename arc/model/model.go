@@ -1,0 +1,71 @@
+package model
+
+// Project describes information provided for the whole project.
+type Project struct {
+	// You *need* to specify a version of architecture to use, but the version may be a wildcard,
+	// which automatically will use the latest version of architecture.
+	// This is according to https://semver.org/ spec.
+	ArcVersion string `tadl:"arc_version"`
+	// The name for this domain.
+	Name string `tadl:"name"`
+	// A short description for this domain.
+	Description     string `tadl:"description"`
+	BoundedContexts []BoundedContext
+	Stories         []Story `tadl:"story"`
+	Glossary        Glossary
+}
+
+type Glossary struct {
+	Definitions map[string]string `tadl:",inner"`
+}
+
+// BoundedContext describes meta information for a bounded context.
+type BoundedContext struct {
+	Name        string `tadl:"name"`
+	Description string `tadl:"description"`
+	// License is one of the identifiers from here: https://spdx.org/licenses/
+	// This will allow the generator to download the corresponding license from here:
+	// https://github.com/spdx/license-list-data
+	License   string `tadl:"license"`
+	Authors   Authors
+	Generator GeneratorSelection `tadl:"generator"`
+	Artifacts Artifacts
+}
+
+// Authors is list of authors that contributed to this context.
+type Authors struct {
+	Authors []Author `tadl:"author"`
+}
+
+// Author is a person with a name and a mail address.
+type Author struct {
+	Name string `tadl:"name"`
+	Mail string `tadl:"mail"`
+}
+
+// GeneratorSelection can contain an arbitrary selection of types
+// for which projects should be generated for a given BoundedContext.
+type GeneratorSelection struct {
+	Go      *GoGenerator      `tadl:"go"`
+	Android *AndroidGenerator `tadl:"android"`
+}
+
+// GoGenerator is a generator to create go projects with.
+type GoGenerator struct {
+	// Package is the name of the go package that will be generated.
+	Package string       `tadl:"package"`
+	Build   DesktopBuild `tadl:"build"`
+}
+
+// DesktopBuild contains several build targets for desktop operating systems.
+// Field Darwin could contain 'amd64' if we should build for a 64-bit Apple device.
+type DesktopBuild struct {
+	Darwin []string `tadl:"darwin"`
+	Linux  []string `tadl:"linux"`
+}
+
+// AndroidGenerator does nothing and is only used as a demonstration of different
+// generator backends.
+type AndroidGenerator struct {
+	Package string `tadl:"package"`
+}

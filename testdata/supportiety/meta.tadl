@@ -1,0 +1,10 @@
+#!{
+    // This document contains some metadata about the domain.
+    // You can freely choose if you want to use tadl in text-first or node-first mode,
+    // but some modes might feel more natural in some files than others.
+    // See package model for descriptions for fields in this and other files.
+
+    arc_version "*"
+    name "Supportiety"
+    description "A ticketing system for customer support."
+}

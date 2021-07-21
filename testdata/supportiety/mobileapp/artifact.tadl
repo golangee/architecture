@@ -1,0 +1,7 @@
+#! {
+    // This file contains all model definitions that are needed in this bounded context.
+    entity @name="AppLogin" {
+        Start   DateTime,
+        Expires DateTime,
+    }
+}
