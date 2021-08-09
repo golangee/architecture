@@ -6,5 +6,5 @@
 
     arc_version "*"
     name "Supportiety"
-    description "A ticketing system for customer support."
+    description "A ticketing system for customer support. This is an incomplete and partly inconsistent example."
 }
