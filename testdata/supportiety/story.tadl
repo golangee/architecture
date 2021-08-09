@@ -18,3 +18,11 @@
         #then    the error disappears
     }
 }
+
+#story {
+    #id        2
+    #title     Close support ticket
+    #as_a      Supporter
+    #i_want_to close user tickets once they have been handled
+    #so_that   the now old ticket no longer shows up in our backlog.
+}

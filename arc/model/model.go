@@ -1,5 +1,14 @@
 package model
 
+import "fmt"
+
+// Validator should be implemented by all model types to allow for easy validation.
+type Validator interface {
+	// Validate should return nil when everything is okay and a descriptive error
+	// otherwise. To validate references etc. a reference to the project is given.
+	Validate(project *Project) error
+}
+
 // Project describes information provided for the whole project.
 type Project struct {
 	// You *need* to specify a version of architecture to use, but the version may be a wildcard,
@@ -13,6 +22,20 @@ type Project struct {
 	BoundedContexts []BoundedContext
 	Stories         []Story `tadl:"story"`
 	Glossary        Glossary
+}
+
+// Validate will check the whole project for validity.
+// Should everything be correct, then nil is returned.
+// Should something be wrong an error describing the problem is returned.
+func (p *Project) Validate(*Project) error {
+	// Check if every method has a user story referenced.
+	for _, boundedContext := range p.BoundedContexts {
+		if err := boundedContext.Validate(p); err != nil {
+			return fmt.Errorf("project '%s' invalid: %w", p.Name, err)
+		}
+	}
+
+	return nil
 }
 
 type Glossary struct {
@@ -30,6 +53,14 @@ type BoundedContext struct {
 	Authors   Authors
 	Generator GeneratorSelection `tadl:"generator"`
 	Artifacts Artifacts
+}
+
+func (b *BoundedContext) Validate(project *Project) error {
+	if err := b.Artifacts.Validate(project); err != nil {
+		return fmt.Errorf("bounded context '%s' invalid: %w", b.Name, err)
+	}
+
+	return nil
 }
 
 // Authors is list of authors that contributed to this context.
