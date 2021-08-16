@@ -1,0 +1,183 @@
+{
+    "ArcVersion": "*",
+    "Name": "Supportiety",
+    "Description": "A ticketing system for customer support. This is an incomplete and partly inconsistent example.",
+    "BoundedContexts": [
+        {
+            "Name": "Supportiety App",
+            "Description": "The app allows administrative access for authorized users with a smartphone app.",
+            "License": {
+                "Name": "MIT"
+            },
+            "Authors": {
+                "Authors": null
+            },
+            "Generator": {
+                "Go": null,
+                "Android": {
+                    "Package": "com.example.worldiety.supportiety"
+                }
+            },
+            "Artifacts": {
+                "Values": null,
+                "Entities": [
+                    {
+                        "Name": "AppLogin",
+                        "Description": "",
+                        "Fields": {
+                            "Expires": "DateTime",
+                            "Start": "DateTime"
+                        }
+                    }
+                ],
+                "Aggregates": null
+            }
+        },
+        {
+            "Name": "Supportiety Server",
+            "Description": "The supportiety server is responsible for managing support tickets.",
+            "License": {
+                "Name": "Apache-2.0"
+            },
+            "Authors": {
+                "Authors": [
+                    {
+                        "Name": "Lars Martens",
+                        "Mail": "lars.martens@worldiety.de"
+                    },
+                    {
+                        "Name": "Example Person",
+                        "Mail": "person@example.com"
+                    }
+                ]
+            },
+            "Generator": {
+                "Go": {
+                    "Package": "github.com/golangee/architecture/testdata/workspace/server",
+                    "Build": {
+                        "Darwin": [
+                            "amd64",
+                            "arm64"
+                        ],
+                        "Linux": [
+                            "amd64"
+                        ]
+                    }
+                },
+                "Android": null
+            },
+            "Artifacts": {
+                "Values": [
+                    {
+                        "Name": "Address",
+                        "Description": "Address describes a housing address without person specific information.",
+                        "Fields": {
+                            "City": "string",
+                            "HouseNumber": "int",
+                            "Street": "string",
+                            "ZipCode": "int"
+                        }
+                    }
+                ],
+                "Entities": [
+                    {
+                        "Name": "Person",
+                        "Description": "Person is a person living somewhere.",
+                        "Fields": {
+                            "Address": "Address",
+                            "Firstname": "string",
+                            "Lastname": "string"
+                        }
+                    },
+                    {
+                        "Name": "Ticket",
+                        "Description": "Ticket describes a support ticket that has some text and a type (bug report, feedback, etc.)",
+                        "Fields": {
+                            "Text": "string",
+                            "Time": "int",
+                            "Type": "string"
+                        }
+                    }
+                ],
+                "Aggregates": [
+                    {
+                        "Name": "Application",
+                        "Fields": {
+                            "Tickets": "array"
+                        },
+                        "Methods": {
+                            "CloseTicket": {
+                                "Description": "Close the ticket with the given Id.",
+                                "Story": 2,
+                                "Params": {
+                                    "id": "int"
+                                },
+                                "Returns": null
+                            },
+                            "CreateTicket": {
+                                "Description": "Create a new ticket for this application withthe given information and return its Id.",
+                                "Story": 1,
+                                "Params": {
+                                    "text": "string",
+                                    "time": "int",
+                                    "type": "string"
+                                },
+                                "Returns": {
+                                    "id": "int"
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    ],
+    "Stories": [
+        {
+            "Id": 1,
+            "Title": "Create support ticket\n    ",
+            "AsA": "User\n    ",
+            "IWantTo": "create new support tickets\n    ",
+            "SoThat": "I get help from the support team\n\n    ",
+            "Accept": [
+                {
+                    "Require": [
+                        "a wdy app crashed or has an unexpected error that is displayed in a popup\n        "
+                    ],
+                    "When": [
+                        "the user clicks a button to submit the error\n        "
+                    ],
+                    "Then": [
+                        "the error will be sent to the server\n        ",
+                        "a support ticket ID will be displayed\n    "
+                    ]
+                },
+                {
+                    "Require": [
+                        "a wdy app crashed or has an unexpected error that is displayed\n        "
+                    ],
+                    "When": [
+                        "the user does not want to submit the error\n        "
+                    ],
+                    "Then": [
+                        "the error disappears\n    "
+                    ]
+                }
+            ]
+        },
+        {
+            "Id": 2,
+            "Title": "Close support ticket\n    ",
+            "AsA": "Supporter\n    ",
+            "IWantTo": "close user tickets once they have been handled\n    ",
+            "SoThat": "the now old ticket no longer shows up in our backlog.\n",
+            "Accept": null
+        }
+    ],
+    "Glossary": {
+        "Definitions": {
+            "Ticket": "is a support ticket.\n",
+            "User": "is someone who can create tickets.\n"
+        }
+    }
+}

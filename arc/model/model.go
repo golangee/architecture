@@ -10,6 +10,7 @@ type Validator interface {
 }
 
 // Project describes information provided for the whole project.
+// TODO positional information in types
 type Project struct {
 	// You *need* to specify a version of architecture to use, but the version may be a wildcard,
 	// which automatically will use the latest version of architecture.
@@ -42,6 +43,10 @@ type Glossary struct {
 	Definitions map[string]string `tadl:",inner"`
 }
 
+type License struct {
+	Name string `tadl:",inner"`
+}
+
 // BoundedContext describes meta information for a bounded context.
 type BoundedContext struct {
 	Name        string `tadl:"name"`
@@ -49,10 +54,10 @@ type BoundedContext struct {
 	// License is one of the identifiers from here: https://spdx.org/licenses/
 	// This will allow the generator to download the corresponding license from here:
 	// https://github.com/spdx/license-list-data
-	License   string `tadl:"license"`
-	Authors   Authors
-	Generator GeneratorSelection `tadl:"generator"`
-	Artifacts Artifacts
+	License    License `tadl:"license"`
+	Authors    Authors
+	Generators GeneratorSelection `tadl:"generator"`
+	Artifacts  Artifacts
 }
 
 func (b *BoundedContext) Validate(project *Project) error {
