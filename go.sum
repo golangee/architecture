@@ -32,6 +32,14 @@ github.com/golangee/src v0.0.0-20210622080529-1733b284f6bd h1:0+vJF6RIACsnB6ET6D
 github.com/golangee/src v0.0.0-20210622080529-1733b284f6bd/go.mod h1:zQhMlD1AUuj1QJyuHtN2HNpt/PVRJIhEVdpzzEi00gg=
 github.com/golangee/src v0.0.0-20210622080902-89ed0d0973a3 h1:18AflHeqrtLJsS+5q6xL+MLMWcUu7BBQW8mgq3MEvOU=
 github.com/golangee/src v0.0.0-20210622080902-89ed0d0973a3/go.mod h1:zQhMlD1AUuj1QJyuHtN2HNpt/PVRJIhEVdpzzEi00gg=
+github.com/golangee/src v0.0.0-20210713151903-8fba369c7dca h1:7wXeY6pyUQyr2Sbvl9MdKeB6/kVHeVPjfC4qU14F/gc=
+github.com/golangee/src v0.0.0-20210713151903-8fba369c7dca/go.mod h1:zQhMlD1AUuj1QJyuHtN2HNpt/PVRJIhEVdpzzEi00gg=
+github.com/golangee/src v0.0.0-20210716153231-1ab59655299b h1:0dR9MuoIQ+qFgpiRs59fHEEkum+id1OSrnAB3VXBQVU=
+github.com/golangee/src v0.0.0-20210716153231-1ab59655299b/go.mod h1:zQhMlD1AUuj1QJyuHtN2HNpt/PVRJIhEVdpzzEi00gg=
+github.com/golangee/src v0.0.0-20210716153617-021a358d7cc1 h1:q1gWi70tqD7B1DMDx+FkYzWnkn5CP/UXwRIh+TcmnK4=
+github.com/golangee/src v0.0.0-20210716153617-021a358d7cc1/go.mod h1:zQhMlD1AUuj1QJyuHtN2HNpt/PVRJIhEVdpzzEi00gg=
+github.com/golangee/src v0.0.0-20210716153939-e436847e8c6b h1:cid/ukU0FOgAQAKYj4D4fY3Q9Hx3yd8+3TLoTFPp65A=
+github.com/golangee/src v0.0.0-20210716153939-e436847e8c6b/go.mod h1:zQhMlD1AUuj1QJyuHtN2HNpt/PVRJIhEVdpzzEi00gg=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/r3labs/diff v1.1.0 h1:V53xhrbTHrWFWq3gI4b94AjgEJOerO1+1l0xyHOBi8M=
 github.com/r3labs/diff v1.1.0/go.mod h1:7WjXasNzi0vJetRcB/RqNl5dlIsmXcTTLmF5IoH6Xig=

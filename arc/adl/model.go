@@ -224,6 +224,7 @@ type Package struct {
 	Repositories []*Interface
 	Services     []*Service
 	DTOs         []*Struct
+	Errors       []*Error
 }
 
 func NewPackage(name, comment string) *Package {
@@ -237,6 +238,11 @@ func (p *Package) AddRepositories(r ...*Interface) *Package {
 
 func (p *Package) AddStructs(d ...*Struct) *Package {
 	p.DTOs = append(p.DTOs, d...)
+	return p
+}
+
+func (p *Package) AddErrors(d ...*Error) *Package {
+	p.Errors = append(p.Errors, d...)
 	return p
 }
 
@@ -256,6 +262,10 @@ func (p *Package) Normalize(ctx Ctx) {
 
 	for _, repository := range p.Repositories {
 		repository.Normalize(ctx)
+	}
+
+	for _, e := range p.Errors {
+		e.Normalize(ctx)
 	}
 }
 
@@ -302,7 +312,7 @@ func NewInterface(name, comment string) *Interface {
 	}
 }
 
-func (i *Interface) AddCRUD(crud ...*CRUD) *Interface {
+func (i *Interface) AddCRUDImpl(crud ...*CRUD) *Interface {
 	i.CRUDs = append(i.CRUDs, crud...)
 	return i
 }
@@ -387,6 +397,33 @@ func NewInjection(name, comment, stereotype string, typ *TypeDecl) *Injection {
 
 func (t *Injection) Normalize(ctx Ctx) {
 	t.Type.Normalize(ctx)
+}
+
+type Error struct {
+	Comment token.String
+	Name    token.String
+	Fields  []*Field
+}
+
+func NewError(name, comment string) *Error {
+	return &Error{
+		Comment: traceStr(comment),
+		Name:    traceStr(name),
+		Fields:  nil,
+	}
+}
+
+func (d *Error) Normalize(ctx Ctx) {
+	for _, field := range d.Fields {
+		field.Normalize(ctx)
+	}
+
+}
+
+func (d *Error) AddFields(f ...*Field) *Error {
+	d.Fields = append(d.Fields, f...)
+
+	return d
 }
 
 type Struct struct {
@@ -475,7 +512,8 @@ type Method struct {
 	Name        token.String
 	In          []*Param
 	Out         []*Param
-	StubDefault bool // StubDefault instructs the generator to emit an abstract or default implementation
+	Errors      []*TypeDecl // sum type of error types. Non-qualified names are always resolved to package local declarations or fail.
+	StubDefault bool        // StubDefault instructs the generator to emit an abstract or default implementation
 }
 
 func NewMethod(name, comment string) *Method {
@@ -493,6 +531,10 @@ func (m *Method) Normalize(ctx Ctx) {
 
 	for _, param := range m.Out {
 		param.Normalize(ctx)
+	}
+
+	for _, decl := range m.Errors {
+		decl.Normalize(ctx)
 	}
 }
 
@@ -513,6 +555,11 @@ func (m *Method) AddOut(name, comment string, decl *TypeDecl) *Method {
 		Type:    decl,
 	})
 
+	return m
+}
+
+func (m *Method) AddErrors(names ...*TypeDecl) *Method {
+	m.Errors = append(m.Errors, names...)
 	return m
 }
 

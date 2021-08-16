@@ -87,7 +87,7 @@ func RenderModule(dst *ast.Prj, prj *adl.Project, src *adl.Module) error {
 		coreRoot.SetComment("...contains the domains primitives like Entities, Values, Repositories, Services (anemic), Events, aggregate roots (non-anemic) or DTOs.")
 		coreRoot.SetPreamble(makePreamble(src.Preamble))
 		for _, p := range bc.Core {
-			if err := renderUserTypes(coreRoot, src, p); err != nil {
+			if err := renderUserTypes(coreRoot, src, bc, p); err != nil {
 				return token.NewPosError(p.Name, "unable to render domain core package").SetCause(err)
 			}
 		}
@@ -98,7 +98,7 @@ func RenderModule(dst *ast.Prj, prj *adl.Project, src *adl.Module) error {
 		usecaseRoot.SetComment("...contains the domains use cases, usually in a service form, which uses an arbitrary composition of the domains primitives.")
 		usecaseRoot.SetPreamble(makePreamble(src.Preamble))
 		for _, p := range bc.Usecase {
-			if err := renderUserTypes(usecaseRoot, src, p); err != nil {
+			if err := renderUserTypes(usecaseRoot, src, bc, p); err != nil {
 				return token.NewPosError(p.Name, "unable to render domain usecase package").SetCause(err)
 			}
 		}
@@ -117,13 +117,25 @@ func RenderModule(dst *ast.Prj, prj *adl.Project, src *adl.Module) error {
 	return nil
 }
 
-func renderUserTypes(parent *ast.Pkg, srcMod *adl.Module, src *adl.Package) error {
+func renderUserTypes(parent *ast.Pkg, srcMod *adl.Module, srcBc *adl.BoundedContext, src *adl.Package) error {
 	mod := astutil.Mod(parent)
 	pkg := parent
 	if src.Name.String() != "" {
 		pkg = astutil.MkPkg(mod, golang.MakePkgPath(pkg.Path, src.Name.String()))
 		pkg.SetPreamble(makePreamble(srcMod.Preamble))
 		pkg.SetComment(src.Comment.String())
+	}
+
+	// errors
+	if len(src.Errors) > 0 {
+		file := ast.NewFile(strings.ToLower("errors.go"))
+		pkg.AddFiles(file)
+		file.SetPreamble(makePreamble(srcMod.Preamble))
+
+		if _, err := buildErrors(file, srcMod, srcBc, src, src.Errors); err != nil {
+			return fmt.Errorf("cannot build errors: %w", err)
+		}
+
 	}
 
 	// dtos
