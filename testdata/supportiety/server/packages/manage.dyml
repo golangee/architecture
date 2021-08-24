@@ -1,0 +1,30 @@
+#! {
+    // This service will create tickets
+
+    type "core"
+
+    services {
+        "persistence"
+    }
+
+    @@name="CreateTicket"
+    @@view="Ticket"
+    object {
+        name string,
+        description string,
+    }
+
+    @@name="CloseTicket"
+    @@view="Ticket"
+    object {
+        id UUID
+    }
+
+    methods {
+        @@story="ticket_create"
+        Create(t CreateTicket)
+        
+        @@story="ticket_close"
+        Close(t CloseTicket)
+    }
+}

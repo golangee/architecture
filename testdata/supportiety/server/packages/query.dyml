@@ -1,0 +1,30 @@
+#! {
+    type "core"
+
+    services {
+        "persistence"
+    }
+
+    @@name="TicketList"
+    @@view="Ticket"
+    object {
+        tickets Ticket array
+    }
+
+    @@name="Ticket"
+    @@view="Ticket"
+    object {
+        name string,
+        description string,
+    }
+
+    @@name="GetError"
+    error {
+        ReadFailed,
+    }
+
+    methods {
+        GetAll() -> (TicketList, GetError)
+        GetOldTickets() -> (TicketList, GetError)
+    }
+}

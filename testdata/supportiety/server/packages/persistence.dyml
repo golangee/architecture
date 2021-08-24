@@ -1,0 +1,47 @@
+#{
+    type "io"
+
+    libraries {
+        "xml"
+        "fs"
+    }
+
+    @@name="Ticket"
+    @@view="Ticket"
+    object {
+        id UUID,
+        title string,
+        description string,
+    }
+
+    @@name="AllTickets"
+    @@view="Ticket"
+    object {
+        tickets Ticket array,
+    }
+
+    error @name="WriteError" {
+        ## Timeout occurred while trying to write to the file.
+        Timeout,
+        ## An error we do not understand.
+        Unknown,
+    }
+
+    error @name="LoadError" {
+        ## The ticket with the given ID could not be found.
+        NoSuchTicket,
+        ## A timeout occurred while trying to read the file.
+        Timeout,
+    }
+
+    methods {
+        ## Write a ticket to the filesystem.
+        WriteTicket(t Ticket) -> (WriteError)
+
+        ## Load the ticket with the given ID from the filesystem.
+        LoadTicket(id UUID) -> (Ticket, LoadError)
+
+        ## Load all tickets from the filesystem.
+        LoadAllTickets() -> (AllTickets, LoadError)
+    }
+}

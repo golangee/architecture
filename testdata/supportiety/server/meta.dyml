@@ -5,13 +5,14 @@
     description "The supportiety server is responsible for managing support tickets."
 
     license "Apache-2.0"
+    
+    author {
+        name "Lars Martens"
+        mail "lars.martens@worldiety.de"
+    }
 
-    generator go {
-        package "github.com/golangee/architecture/testdata/workspace/server"
-        build {
-            darwin "amd64"
-            darwin "arm64"
-            linux  "amd64"
-        }
+    author {
+        name "Example Person"
+        mail "person@example.com"
     }
 }

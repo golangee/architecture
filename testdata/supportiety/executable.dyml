@@ -1,0 +1,44 @@
+#!{
+
+    @@name="supportiety-server"
+    executable {
+
+        services {
+            "server.http"
+            "server.manage"
+            "server.persistence"
+            "server.query"
+        }
+
+        generator go {
+
+            package "example.com/golangee/supportiety"
+
+            lib {
+                name "encoding/json"
+                short "json"
+                version "1.17"
+                type "core"
+            }
+            lib {
+                name "encoding/xml"
+                short "xml"
+                version "1.17"
+                type "core"
+            }
+            lib {
+                name "net.http"
+                short "http"
+                version "1.*"
+                type "io"
+            }
+
+            build {
+                darwin "amd64"
+                darwin "arm64"
+                linux  "amd64"
+            }
+        }
+
+    }
+}

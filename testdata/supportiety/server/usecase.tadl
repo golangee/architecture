@@ -1,5 +1,0 @@
-#UseCase {
-    #Id 1
-    #Title Creating tickets.
-    #Description A user wants to create a ticket.
-}

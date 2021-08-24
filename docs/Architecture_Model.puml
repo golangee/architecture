@@ -95,6 +95,14 @@ class GoGenerator {
     + Package: PString
 }
 GoGenerator *-- "1\n+Build" DesktopBuild
+GoGenerator *-- "*\n+Dependencies" DependencyDefinition
+
+class DependencyDefinition {
+    + ShortName: PString
+    + Name: PString
+    + Version: PString
+}
+DependencyDefinition *-- "1\n+Type" ServiceType
 
 class DesktopBuild {
     + Darwin: []PString
@@ -109,11 +117,13 @@ class DTO {
 
 class Error {
     + Name: PString
-    + Fields: map[string]Type
+    + Variants: []PString
 }
 
 class Service {
     + Name: PString
+    + ServiceDependencies: []PString
+    + LibDependencies: []PString
 }
 Service *-- "1..*\n+Methods" Method
 Service *-- "1\n+Type" ServiceType
@@ -122,10 +132,6 @@ enum ServiceType {
     + Core
     + IO
 }
-
-note right of Service
-    TODO: Services have dependencies. External ones to libraries and internal ones to other services. Maybe external ones should be specified in the generator settings?
-end note
 
 class Method {
     +Params: map[string]Type
