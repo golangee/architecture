@@ -11,24 +11,23 @@
         }
 
         generator go {
-
             package "example.com/golangee/supportiety"
 
             lib {
+                id "json"
                 name "encoding/json"
-                short "json"
                 version "1.17"
                 type "core"
             }
             lib {
+                id "xml"
                 name "encoding/xml"
-                short "xml"
                 version "1.17"
                 type "core"
             }
             lib {
+                id "http"
                 name "net.http"
-                short "http"
                 version "1.*"
                 type "io"
             }

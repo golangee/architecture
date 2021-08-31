@@ -36,28 +36,26 @@ class Domain {
     + ArcVersion: PString
     + Description: PString
 }
-Domain *- "1\r+Glossary" Glossary
-Domain *-- "1..*\r+BoundedContexts" BoundedContext
-Domain *-- "1..*\r+Executables" Executable
+Domain *- "1\n+Glossary" Glossary
+Domain *-- "1..*\n+BoundedContexts" BoundedContext
+Domain *-- "1..*\n+Executables" Executable
 
 class BoundedContext {
     + Name: PString
     + Description: PString
 }
-BoundedContext *-- "1\r+License" License
-BoundedContext *-- "1\r+Authors" Authors
-BoundedContext *-- "1..*\r+Stories" Story
-BoundedContext *- "1\r+Glossary" Glossary
-BoundedContext *-- "1\r+Core" Package
-BoundedContext *-- "1..*\r+Usecases" Package
+BoundedContext *-- "1\n+License" License
+BoundedContext *-- "1\n+Authors" Authors
+BoundedContext *-- "1..*\n+Stories" Story
+BoundedContext *- "1\n+Glossary" Glossary
+BoundedContext *-- "1\n+Core" Package
+BoundedContext *-- "*\n+Usecases" Package
 
 class Package {}
-Package *-- "*\r+Objects" DTO
-Package *-- "*\r+Errors" Error
-Package *-[norank]- "1..*\r+Services" Service
+Package *-[norank]- "1..*\n+Services" Service
 
 class Authors {}
-Authors *-- "1..*\r+Authors" Author
+Authors *-- "1..*\n+Authors" Author
 
 class Author {
     + Name: PString
@@ -88,8 +86,8 @@ class AcceptCriterion {
 }
 
 class GeneratorSelection {}
-GeneratorSelection *-- "0..1\r+Go" GoGenerator
-GeneratorSelection *-- "0..1\r+Android" AndroidGenerator
+GeneratorSelection *-- "0..1\n+Go" GoGenerator
+GeneratorSelection *-- "0..1\n+Android" AndroidGenerator
 
 class GoGenerator {
     + Package: PString
@@ -98,7 +96,7 @@ GoGenerator *-- "1\n+Build" DesktopBuild
 GoGenerator *-- "*\n+Dependencies" DependencyDefinition
 
 class DependencyDefinition {
-    + ShortName: PString
+    + Id: PString
     + Name: PString
     + Version: PString
 }
@@ -127,6 +125,8 @@ class Service {
 }
 Service *-- "1..*\n+Methods" Method
 Service *-- "1\n+Type" ServiceType
+Service *-- "*\n+Objects" DTO
+Service *-- "*\n+Errors" Error
 
 enum ServiceType {
     + Core
@@ -134,12 +134,13 @@ enum ServiceType {
 }
 
 class Method {
-    +Params: map[string]Type
-    +Result: map[string]Type
+    + Story: string
+    + Params: map[PString]Type
+    + Result: map[PString]Type
 }
 
 class Executable {}
 Executable --> "1..*\n+Services" Service
-Executable *- "1\r+Generators" GeneratorSelection
+Executable *- "1\n+Generators" GeneratorSelection
 
 @enduml

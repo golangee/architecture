@@ -4,7 +4,7 @@
     // but some modes might feel more natural in some files than others.
     // See package model for descriptions for fields in this and other files.
 
-    arc_version "*"
+    arc_version "0.0.1"
     name "Supportiety"
     description "A ticketing system for customer support. This is an incomplete and partly inconsistent example."
 }
