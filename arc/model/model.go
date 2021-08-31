@@ -1,6 +1,11 @@
 package model
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+	"github.com/golangee/tadl/parser"
+	"github.com/golangee/tadl/token"
+)
 
 // Validator should be implemented by all model types to allow for easy validation.
 type Validator interface {
@@ -9,17 +14,37 @@ type Validator interface {
 	Validate(project *Project) error
 }
 
+type PString struct {
+	Str  string
+	File string
+	Pos  token.Position
+}
+
+// UnmarshalTadl for a PString reads the given node as text and stores its position.
+func (p *PString) UnmarshalTadl(node *parser.TreeNode) error {
+	text := node.Children[0]
+
+	if !text.IsText() {
+		// TODO Nicer error handling
+		return errors.New("node needs to be text")
+	}
+
+	p.Str = *text.Text
+	p.Pos = text.Range
+
+	return nil
+}
+
 // Project describes information provided for the whole project.
-// TODO positional information in types
 type Project struct {
 	// You *need* to specify a version of architecture to use, but the version may be a wildcard,
 	// which automatically will use the latest version of architecture.
 	// This is according to https://semver.org/ spec.
-	ArcVersion string `tadl:"arc_version"`
+	ArcVersion PString `tadl:"arc_version"`
 	// The name for this domain.
-	Name string `tadl:"name"`
+	Name PString `tadl:"name"`
 	// A short description for this domain.
-	Description     string `tadl:"description"`
+	Description     PString `tadl:"description"`
 	BoundedContexts []BoundedContext
 	Stories         []Story `tadl:"story"`
 	Glossary        Glossary
@@ -40,31 +65,26 @@ func (p *Project) Validate(*Project) error {
 }
 
 type Glossary struct {
-	Definitions map[string]string `tadl:",inner"`
+	Definitions map[string]PString `tadl:",inner"`
 }
 
 type License struct {
-	Name string `tadl:",inner"`
+	Name PString `tadl:",inner"`
 }
 
 // BoundedContext describes meta information for a bounded context.
 type BoundedContext struct {
-	Name        string `tadl:"name"`
-	Description string `tadl:"description"`
+	Name        PString `tadl:"name"`
+	Description PString `tadl:"description"`
 	// License is one of the identifiers from here: https://spdx.org/licenses/
 	// This will allow the generator to download the corresponding license from here:
 	// https://github.com/spdx/license-list-data
-	License    License `tadl:"license"`
-	Authors    Authors
-	Generators GeneratorSelection `tadl:"generator"`
-	Artifacts  Artifacts
+	License  License `tadl:"license"`
+	Authors  Authors `tadl:",inner"`
+	Glossary Glossary
 }
 
 func (b *BoundedContext) Validate(project *Project) error {
-	if err := b.Artifacts.Validate(project); err != nil {
-		return fmt.Errorf("bounded context '%s' invalid: %w", b.Name, err)
-	}
-
 	return nil
 }
 
@@ -75,8 +95,8 @@ type Authors struct {
 
 // Author is a person with a name and a mail address.
 type Author struct {
-	Name string `tadl:"name"`
-	Mail string `tadl:"mail"`
+	Name PString `tadl:"name"`
+	Mail PString `tadl:"mail"`
 }
 
 // GeneratorSelection can contain an arbitrary selection of types
@@ -89,19 +109,19 @@ type GeneratorSelection struct {
 // GoGenerator is a generator to create go projects with.
 type GoGenerator struct {
 	// Package is the name of the go package that will be generated.
-	Package string       `tadl:"package"`
+	Package PString      `tadl:"package"`
 	Build   DesktopBuild `tadl:"build"`
 }
 
 // DesktopBuild contains several build targets for desktop operating systems.
 // Field Darwin could contain 'amd64' if we should build for a 64-bit Apple device.
 type DesktopBuild struct {
-	Darwin []string `tadl:"darwin"`
-	Linux  []string `tadl:"linux"`
+	Darwin []PString `tadl:"darwin"`
+	Linux  []PString `tadl:"linux"`
 }
 
 // AndroidGenerator does nothing and is only used as a demonstration of different
 // generator backends.
 type AndroidGenerator struct {
-	Package string `tadl:"package"`
+	Package PString `tadl:"package"`
 }
