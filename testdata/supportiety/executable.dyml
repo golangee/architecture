@@ -1,37 +1,58 @@
 #!{
 
+    // Executables bundle a selection of services from different bounded contexts together to
+    // create a sensible application.
     @@name="supportiety-server"
     executable {
 
-        services {
-            "server.http"
-            "server.manage"
-            "server.persistence"
-            "server.query"
+        // The architecture node describes how services inside the executable are interacting.
+        architecture {
+
+            // There are different architectural models you can choose for your project.
+            // Currently a 3-layer architecture is the only supported one.
+            // In this one, each service will be one of three types:
+            // presentation -> application -> data
+            // and communication is only allowed as indicated by the arrows.
+            type "3layer"
+
+            // Each service specifies how it interacts with other services.
+            // When we try to run the generator, it will check if dependencies
+            // between services are well-behaved, e.g. no presentation service accesses
+            // a data service.
+            // For other architectural models, the names and rules for interaction will be different.
+
+            // Layer specific settings could work like this. Here we set all presentation services up
+            // to be HTTP servers that provide a rest-API.
+            presentation rest,
         }
 
+        // You can choose one of the supported generators for your executable.
         generator go {
-            package "example.com/golangee/supportiety"
 
+            // Each service might use different dependencies, but to keep the service dependencies
+            // free from implementation details, they only reference an id.
+            // We specify the mapping to the real dependency here. Different generators
+            // could provide different options for libraries, the Go generator only needs a name
+            // and a version, a Java generator might also need a URL to a maven repository and a group id.
             lib {
                 id "json"
                 name "encoding/json"
                 version "1.17"
-                type "core"
             }
             lib {
                 id "xml"
                 name "encoding/xml"
                 version "1.17"
-                type "core"
             }
             lib {
                 id "http"
                 name "net.http"
-                version "1.*"
-                type "io"
+                version "1.17"
             }
 
+            // More configuration depends on the chosen generator.
+            // This generator could have options for generating a Makefile that can build
+            // binaries for different architectures.
             build {
                 darwin "amd64"
                 darwin "arm64"

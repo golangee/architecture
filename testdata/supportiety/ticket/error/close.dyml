@@ -1,0 +1,6 @@
+#! {
+    ## The ticket could not be found.
+    NotFound,
+    ## The tickt was already closed.
+    AlreadyClosed,
+}

@@ -1,0 +1,49 @@
+#! {
+    // Each file in the directory "object" describes an abstract DTO
+    // and all its manifestations.
+    // The name is given by the filename.
+    // It is only valid in this bounded context.
+
+    // Each object file must have a description.
+    description "... is a support ticket."
+
+    // All possible properties a ticket can have are given here.
+    properties {
+        title string,
+        description string,
+        id Uuid,
+        // Reference to the id of a user. We could also nest the whole user here,
+        // by specifying "User".
+        creator User.id,
+        assignee User.id,
+        status TicketStatus,
+    }
+
+    // Non-primitive types are defined here.
+    // Could they be shared?
+    // Is it a good idea to support this?
+    // Or should people be forced to create a new DTO for this?
+    @@name="TicketStatus"
+    enum {
+        Open,
+        Closed,
+    }
+
+    // A "ticket" is an ideal concept, real objects that can be handed
+    // around must be defined here. These are views on the real ticket.
+    // They have the exact same property types, so you only need to
+    // specify a list of property names.
+
+    @@name="Create"
+    view { title, description, creator }
+
+    @@name="Persist"
+    view { title, description, id, creator, assignee, status }
+
+    @@name="Show"
+    view { title, description, id, status }
+
+    @@name="ById"
+    view { id }
+
+}

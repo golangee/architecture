@@ -1,0 +1,43 @@
+#! {
+    // This file describes a service in this bounded context.
+    // Its name is given by the filename and the bounded context by the folder
+    // for the bounded context.
+    // The full path to this service would then be "ticket.manage".
+
+    // Since this service describes core application logic,
+    // we set its type to "application" for the 3-layer architecture.
+    type "application"
+
+    // A list of other services this service needs.
+    services {
+        "files.persistence"
+    }
+
+    // Methods are all methods that this services provides.
+    // There are some keywords defined for the return types,
+    // which can more precisely define the business logic.
+    // A plain type indicates that a concrete instance is returned,
+    // and not null (or equivalent).
+    // "maybe" is the given type or null (or equivalent).
+    // "either" is exactly one of the provided types.
+    // These concepts can then be transpiled to more idiomatic
+    // patterns of the target language, e.g. "maybe<Type>" would
+    // be a nullable pointer "*Type" in Go, an "Option<Type>" in Rust,
+    // and an "Optional<Type>" in Java.
+
+    methods {
+        ## Create a new ticket.
+        @@story="ticket_create"
+        Create(ticket.Create) -> either<ticket.Show, error.create>
+
+        ## Close the ticket with the given id.
+        @@story="ticket_close"
+        Close(ticket.ById) -> maybe<error.close>
+
+        ## Assign a ticket to be edited by the given user.
+        // This method does not have a story attached to it and would fail
+        // validation.
+        Assign(ticket.ById, user.ById) -> maybe<error.assign>
+    }
+
+}

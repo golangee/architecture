@@ -1,0 +1,241 @@
+{
+    "ArcVersion": {
+        "Str": "0.0.1",
+        "File": "",
+        "Pos": {
+            "BeginPos": {
+                "File": "",
+                "Line": 7,
+                "Col": 17,
+                "Offset": 323
+            },
+            "EndPos": {
+                "File": "",
+                "Line": 7,
+                "Col": 24,
+                "Offset": 328
+            }
+        }
+    },
+    "Name": {
+        "Str": "Supportiety",
+        "File": "",
+        "Pos": {
+            "BeginPos": {
+                "File": "",
+                "Line": 8,
+                "Col": 10,
+                "Offset": 340
+            },
+            "EndPos": {
+                "File": "",
+                "Line": 8,
+                "Col": 23,
+                "Offset": 351
+            }
+        }
+    },
+    "Description": {
+        "Str": "A ticketing system for customer support. This is an incomplete and partly inconsistent example.",
+        "File": "",
+        "Pos": {
+            "BeginPos": {
+                "File": "",
+                "Line": 9,
+                "Col": 17,
+                "Offset": 370
+            },
+            "EndPos": {
+                "File": "",
+                "Line": 9,
+                "Col": 114,
+                "Offset": 465
+            }
+        }
+    },
+    "BoundedContexts": [
+        {
+            "Name": {
+                "Str": "Supportiety Server",
+                "File": "",
+                "Pos": {
+                    "BeginPos": {
+                        "File": "",
+                        "Line": 4,
+                        "Col": 10,
+                        "Offset": 81
+                    },
+                    "EndPos": {
+                        "File": "",
+                        "Line": 4,
+                        "Col": 30,
+                        "Offset": 99
+                    }
+                }
+            },
+            "Description": {
+                "Str": "The supportiety server is responsible for managing support tickets.",
+                "File": "",
+                "Pos": {
+                    "BeginPos": {
+                        "File": "",
+                        "Line": 5,
+                        "Col": 17,
+                        "Offset": 118
+                    },
+                    "EndPos": {
+                        "File": "",
+                        "Line": 5,
+                        "Col": 86,
+                        "Offset": 185
+                    }
+                }
+            },
+            "License": {
+                "Name": {
+                    "Str": "Apache-2.0",
+                    "File": "",
+                    "Pos": {
+                        "BeginPos": {
+                            "File": "",
+                            "Line": 7,
+                            "Col": 13,
+                            "Offset": 201
+                        },
+                        "EndPos": {
+                            "File": "",
+                            "Line": 7,
+                            "Col": 25,
+                            "Offset": 211
+                        }
+                    }
+                }
+            },
+            "Authors": {
+                "Authors": [
+                    {
+                        "Name": {
+                            "Str": "Lars Martens",
+                            "File": "",
+                            "Pos": {
+                                "BeginPos": {
+                                    "File": "",
+                                    "Line": 10,
+                                    "Col": 14,
+                                    "Offset": 245
+                                },
+                                "EndPos": {
+                                    "File": "",
+                                    "Line": 10,
+                                    "Col": 28,
+                                    "Offset": 257
+                                }
+                            }
+                        },
+                        "Mail": {
+                            "Str": "lars.martens@worldiety.de",
+                            "File": "",
+                            "Pos": {
+                                "BeginPos": {
+                                    "File": "",
+                                    "Line": 11,
+                                    "Col": 14,
+                                    "Offset": 273
+                                },
+                                "EndPos": {
+                                    "File": "",
+                                    "Line": 11,
+                                    "Col": 41,
+                                    "Offset": 298
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "Name": {
+                            "Str": "Example Person",
+                            "File": "",
+                            "Pos": {
+                                "BeginPos": {
+                                    "File": "",
+                                    "Line": 15,
+                                    "Col": 14,
+                                    "Offset": 334
+                                },
+                                "EndPos": {
+                                    "File": "",
+                                    "Line": 15,
+                                    "Col": 30,
+                                    "Offset": 348
+                                }
+                            }
+                        },
+                        "Mail": {
+                            "Str": "person@example.com",
+                            "File": "",
+                            "Pos": {
+                                "BeginPos": {
+                                    "File": "",
+                                    "Line": 16,
+                                    "Col": 14,
+                                    "Offset": 364
+                                },
+                                "EndPos": {
+                                    "File": "",
+                                    "Line": 16,
+                                    "Col": 34,
+                                    "Offset": 382
+                                }
+                            }
+                        }
+                    }
+                ]
+            },
+            "Glossary": {
+                "Definitions": null
+            }
+        }
+    ],
+    "Stories": null,
+    "Glossary": {
+        "Definitions": {
+            "Ticket": {
+                "Str": "is a support ticket.\n",
+                "File": "",
+                "Pos": {
+                    "BeginPos": {
+                        "File": "",
+                        "Line": 1,
+                        "Col": 9,
+                        "Offset": 10
+                    },
+                    "EndPos": {
+                        "File": "",
+                        "Line": 2,
+                        "Col": 1,
+                        "Offset": 30
+                    }
+                }
+            },
+            "User": {
+                "Str": "is someone who can create tickets.\n",
+                "File": "",
+                "Pos": {
+                    "BeginPos": {
+                        "File": "",
+                        "Line": 2,
+                        "Col": 7,
+                        "Offset": 37
+                    },
+                    "EndPos": {
+                        "File": "",
+                        "Line": 3,
+                        "Col": 1,
+                        "Offset": 70
+                    }
+                }
+            }
+        }
+    },
+    "Executables": null
+}

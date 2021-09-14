@@ -1,0 +1,20 @@
+#! {
+    description "... is any supportiety user."
+
+    properties {
+        id Uuid,
+        name string,
+        role Role,
+    }
+
+    @@name="Role"
+    enum {
+        Admin,
+        Support,
+        Submit,
+    }
+
+    @@name="ById"
+    view { id }
+
+}

@@ -2,7 +2,7 @@
     // This document contains some metadata about the domain.
     // You can freely choose if you want to use tadl in text-first or node-first mode,
     // but some modes might feel more natural in some files than others.
-    // See package model for descriptions for fields in this and other files.
+    // Each folder in this project is a bounded context.
 
     arc_version "0.0.1"
     name "Supportiety"

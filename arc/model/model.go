@@ -48,6 +48,7 @@ type Project struct {
 	BoundedContexts []BoundedContext
 	Stories         []Story `tadl:"story"`
 	Glossary        Glossary
+	Executables     Executables
 }
 
 // Validate will check the whole project for validity.
@@ -62,6 +63,15 @@ func (p *Project) Validate(*Project) error {
 	}
 
 	return nil
+}
+
+type Executable struct {
+	Generators GeneratorSelection
+	Services   []PString `tadl:"services"`
+}
+
+type Executables struct {
+	Executables []Executable `tadl:"executable"`
 }
 
 type Glossary struct {

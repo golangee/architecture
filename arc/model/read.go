@@ -34,6 +34,12 @@ func ParseWorkspace(folder string) (*Project, error) {
 
 	project.Glossary = glossary
 
+	// Read executables
+	f, err = os.Open(filepath.Join(folder, "executable.dyml"))
+	if err != nil {
+		return nil, err
+	}
+
 	// TODO Parse stories
 
 	if err = tadl.Unmarshal(f, &project, false); err != nil {

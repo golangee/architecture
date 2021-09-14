@@ -1,0 +1,14 @@
+#! {
+    type "application"
+
+    services {
+        "files.persistence"
+    }
+
+    methods {
+        // An architecture-builtin "list" can be used to
+        // mark any type as an array/list/slice/vec (whatever is more
+        // idiomatic in the target language) of that type.
+        ListAll() -> list<ticket.Show>
+    }
+}
