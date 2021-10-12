@@ -100,7 +100,6 @@ class DependencyDefinition {
     + Name: PString
     + Version: PString
 }
-DependencyDefinition *-- "1\n+Type" ServiceType
 
 class DesktopBuild {
     + Darwin: []PString
@@ -124,7 +123,7 @@ class Service {
     + LibDependencies: []PString
 }
 Service *-- "1..*\n+Methods" Method
-Service *-- "1\n+Type" ServiceType
+Service *- "1\n+Type" ServiceType
 Service *-- "*\n+Objects" DTO
 Service *-- "*\n+Errors" Error
 

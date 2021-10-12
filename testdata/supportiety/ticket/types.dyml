@@ -1,0 +1,108 @@
+#? This file contains all the types. This is not a requirement, as files can be
+   structured as you like.
+
+// Config types can be injected into services, but their values are only set on application start.
+// There will be methods generated for setting the values from config files or environment variables.
+#! config SQLConfig {
+    properties {
+        host string,
+        port int,
+        db   string,
+    }
+}
+
+#! error AssignError {
+    UserNotFound,
+    TicketNotFound,
+    NotApplicable,
+}
+
+#! error CloseError {
+    ## The ticket could not be found.
+    NotFound,
+    ## The tickt was already closed.
+    AlreadyClosed,
+}
+
+#! error CreateError {
+    ## An internal error occurred, which has details that should not be exposed.
+    Internal,
+}
+
+#! enum Role {
+    Admin,
+    Developer,
+    Guest,
+}
+
+#! enum TicketStatus {
+    Open,
+    Closed,
+}
+
+## A base for common ticket properties.
+#! dto TicketBase {
+    properties {
+        id Uuid,
+        title string,
+        description string,
+        ## The User that created this ticket.
+        creator Uuid,
+        ## The User that should work on this ticket.
+        assignee Uuid,
+        status TicketStatus,
+    }
+}
+
+// The "type" keyword can be used to define new types.
+#! type TicketID Uuid;
+
+#! dto TicketCreate {
+    from TicketBase {title, description, creator}
+}
+
+#! dto TicketShow {
+    from TicketBase {title, description, id, status}
+}
+
+#! dto TicketById {
+    from Ticketbase {id}
+}
+
+#! dto SpecialThing {
+    // Copy properties from another DTO:
+    from TicketBase {title, description}
+
+    // Copy properties from a DTO from another BC:
+    from iam.User {authLevel}
+
+    // Copying a copied property like this should not be allowed (?),
+    // as a change to the original property could quickly cascade through
+    // the entire codebase and create type problems, which would be hard to
+    // predict because of the high level of nesting.
+    from TicketCreate {creator}
+
+    // Define additional properties
+    properties {
+        timestamp int,
+    }
+}
+
+#! dto User {
+    properties {
+        id Uuid,
+        name string,
+        // Enums, aliases and DTOs from the same BC do not need to be prefixed.
+        role UserRole,
+    }
+}
+
+#! dto UserById {
+    from User {id}
+}
+
+#! enum UserRole {
+    Admin,
+    User,
+    Guest,
+}

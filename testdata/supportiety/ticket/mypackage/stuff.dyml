@@ -1,0 +1,7 @@
+// All files in this folder make up the content of the package "mypackage".
+
+#! dto Thing {
+    properties {
+        id string,
+    }
+}
