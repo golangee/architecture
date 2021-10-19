@@ -1,0 +1,25 @@
+= architecture MVP
+
+In this directory a minimum viable prototype for a code generator will be built.
+The goal is to have a directory describing a domain with DYML files and have the MVP output a runnable project with placeholders.
+
+To make this an achievable goal, the MVP will not support the full vision of this project, but only the following:
+
+* Only a single executable can be generated, although the input format should already support defining multiple ones.
+* Only Go projects can be generated and only options for Go projects are supported, although support for other project types should be kept in mind.
+* Only types can be imported from libraries.
+* Only a 4-layer architecture will be supported, but other models should be possible to implement.
+* An injection layer should be generated that resolves the dependencies between services and wires them together at startup.
+* The presentation layer will provide a REST service.
+* Any number of bounded contexts will be supported.
+* Packages will not be supported.
+Their addition does not bring any benefit to the small scale of this MVP but will increase complexity.
+They should be kept in mind so that addition down the line is possible.
+* The generated project will have some form of documentation attached to it, a README file at least.
+* A glossary should be generated for every bounded context from the comments on DTOs and methods.
+* The generated project should have a valid license attached to it that can be selected in the meta.dyml file.
+* The generated project should be able to be started by just running `make` and maybe placing some values in a `.env` file.
+* The Makefile should also be able to build a binary for the current platform.
+* Some validation should take place, at least the methods of services should be checked to have valid stories attached to them.
+* Service methods should be able to return either a value, an error, or a value with an error.
+* DTOs can have properties defined on them, but the "from" directive for copying properties will not be supported.

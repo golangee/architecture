@@ -3,8 +3,8 @@ package model
 import (
 	"errors"
 	"fmt"
-	"github.com/golangee/tadl/parser"
-	"github.com/golangee/tadl/token"
+	"github.com/golangee/dyml/parser"
+	"github.com/golangee/dyml/token"
 )
 
 // Validator should be implemented by all model types to allow for easy validation.

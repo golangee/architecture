@@ -24,7 +24,7 @@
 
         // Layer specific settings could work like this. Here we set all presentation services up
         // to be HTTP servers that provide a rest-API.
-        presentation rest,
+        presentation "rest",
     }
 
     // You can choose one of the supported generators for your executable.
@@ -33,11 +33,11 @@
         // More configuration depends on the chosen generator.
         // This generator could have options for generating a Makefile that can build
         // binaries for different architectures.
-        build {
-            darwin "amd64"
-            darwin "arm64"
-            linux  "amd64"
-        }
+        // build {
+        //     darwin "amd64"
+        //     darwin "arm64"
+        //     linux  "amd64"
+        //}
 
         // Every generator needs to know how to resolve the types that were imported
         // from libraries.
@@ -49,17 +49,16 @@
 
         // This is an exemplary Java dependency, which would need to be placed in a Java
         // generator. Java dependencies (from Gradle) need more stuff.
-        dependency {
-            name "com.company.uuid"
-            version "1.0.0"
-            group "com.company"
-            repo "maven"
-        }
+        // dependency {
+        //     version "1.0.0"
+        //     group "com.company"
+        //     repo "maven"
+        // }
 
         // An finally an example of how a Rust dependency might look.
-        dependency {
-            name "uuid"
-            version "1.0.0"
-        }
+        // dependency {
+        //     name "uuid"
+        //     version "1.0.0"
+        // }
     }
 }

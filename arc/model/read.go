@@ -5,10 +5,10 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/golangee/tadl"
+	"github.com/golangee/dyml"
 )
 
-// ParseWorkspace parses a Tadl workspace folder at the given path.
+// ParseWorkspace parses a Dyml workspace folder at the given path.
 func ParseWorkspace(folder string) (*Project, error) {
 	// Read metadata for whole project
 	f, err := os.Open(filepath.Join(folder, "meta.dyml"))
@@ -17,7 +17,7 @@ func ParseWorkspace(folder string) (*Project, error) {
 	}
 
 	var project Project
-	if err = tadl.Unmarshal(f, &project, false); err != nil {
+	if err = dyml.Unmarshal(f, &project, false); err != nil {
 		return nil, err
 	}
 
@@ -28,7 +28,7 @@ func ParseWorkspace(folder string) (*Project, error) {
 	}
 
 	var glossary Glossary
-	if err = tadl.Unmarshal(f, &glossary, false); err != nil {
+	if err = dyml.Unmarshal(f, &glossary, false); err != nil {
 		return nil, err
 	}
 
@@ -42,7 +42,7 @@ func ParseWorkspace(folder string) (*Project, error) {
 
 	// TODO Parse stories
 
-	if err = tadl.Unmarshal(f, &project, false); err != nil {
+	if err = dyml.Unmarshal(f, &project, false); err != nil {
 		return nil, err
 	}
 
@@ -74,7 +74,7 @@ func ParseBoundedContext(folder string) (*BoundedContext, error) {
 	}
 
 	var context BoundedContext
-	if err := tadl.Unmarshal(f, &context, false); err != nil {
+	if err := dyml.Unmarshal(f, &context, false); err != nil {
 		return nil, err
 	}
 

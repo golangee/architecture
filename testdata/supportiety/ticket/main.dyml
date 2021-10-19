@@ -11,10 +11,10 @@
 // "files.store.ipfs.meta.Config" is a reference to the "Config" that can be found in the BC "files"
 // in the sub-package "store.ipfs.meta".
 
-#! service View {
-    type application;
+#! service @name="View" {
+    type "application"
 
-    use files.Persistence;
+    use "files.Persistence"
 
     methods {
         // An architecture-builtin "list" can be used to
@@ -24,10 +24,10 @@
     }
 }
 
-#! service Manage {
-    type usecase;
+#! service @name="Manage" {
+    type "usecase"
 
-    use files.Persistence;
+    use "files.Persistence"
 
     // Methods are all methods that this services provides.
     // There are some keywords defined for the return types,
@@ -57,14 +57,14 @@
     }
 }
 
-#story #ticket_close {
+#story @name{ticket_close} {
     #title     Close support ticket
     #as_a      Supporter
     #i_want_to close user tickets once they have been handled
     #so_that   the now old ticket no longer shows up in our backlog.
 }
 
-#story #ticket_create {
+#story @name{ticket_create} {
     #title     Create support ticket
     #as_a      User
     #i_want_to create new support tickets

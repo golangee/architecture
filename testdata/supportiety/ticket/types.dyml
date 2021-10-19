@@ -40,7 +40,6 @@
     Closed,
 }
 
-## A base for common ticket properties.
 #! dto TicketBase {
     properties {
         id Uuid,
@@ -54,7 +53,8 @@
     }
 }
 
-// The "type" keyword can be used to define new types.
+#? The "type" keyword can be used to define new types.
+
 #! type TicketID Uuid;
 
 #! dto TicketCreate {
