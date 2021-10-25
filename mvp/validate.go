@@ -12,10 +12,6 @@ type Validator interface {
 }
 
 func (d *Domain) Validate(domain *Domain) error {
-	if err := d.License.Validate(domain); err != nil {
-		return err
-	}
-
 	if err := d.ArcVersion.Validate(domain); err != nil {
 		return err
 	}
@@ -40,12 +36,22 @@ func (d *Domain) Validate(domain *Domain) error {
 }
 
 func (b *BoundedContext) Validate(domain *Domain) error {
+	for _, typeImport := range b.Imports {
+		if typeImport.Go == nil {
+			return fmt.Errorf("type import '%s' needs a go block", typeImport.Name)
+		}
+	}
+
 	return nil
 }
 
 func (e *Executable) Validate(domain *Domain) error {
 	if e.Architecture.Type.Value != "4layer" {
 		return token.NewPosError(e.Architecture.Type.Range, "architecture type must be '4layer'")
+	}
+
+	if err := e.License.Validate(domain); err != nil {
+		return err
 	}
 
 	return e.Generators.Validate(domain)

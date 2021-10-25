@@ -21,5 +21,5 @@ They should be kept in mind so that addition down the line is possible.
 * The generated project should be able to be started by just running `make` and maybe placing some values in a `.env` file.
 * The Makefile should also be able to build a binary for the current platform.
 * Some validation should take place, at least the methods of services should be checked to have valid stories attached to them.
-* Service methods should be able to return either a value, an error, or a value with an error.
+* Service methods can always return an error and may return a single result.
 * DTOs can have properties defined on them, but the "from" directive for copying properties will not be supported.

@@ -42,20 +42,20 @@
 
 #! dto TicketBase {
     properties {
-        id Uuid,
+        id UUID,
         title string,
         description string,
         ## The User that created this ticket.
-        creator Uuid,
+        creator UUID,
         ## The User that should work on this ticket.
-        assignee Uuid,
-        status TicketStatus,
+        assignee UUID,
+        // status TicketStatus,
     }
 }
 
 #? The "type" keyword can be used to define new types.
 
-#! type TicketID Uuid;
+#! type TicketID UUID;
 
 #! dto TicketCreate {
     from TicketBase {title, description, creator}
@@ -85,15 +85,16 @@
     // Define additional properties
     properties {
         timestamp int,
+        user User,
     }
 }
 
 #! dto User {
     properties {
-        id Uuid,
+        id UUID,
         name string,
         // Enums, aliases and DTOs from the same BC do not need to be prefixed.
-        role UserRole,
+        // role UserRole,
     }
 }
 

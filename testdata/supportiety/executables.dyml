@@ -2,6 +2,8 @@
 // create a sensible application.
 #! executable supportiety_server {
 
+    license "Apache-2.0"
+
     // The architecture node describes how services inside the executable are interacting.
     architecture {
 
@@ -24,11 +26,16 @@
 
         // Layer specific settings could work like this. Here we set all presentation services up
         // to be HTTP servers that provide a rest-API.
-        presentation "rest",
+        // We also need to specify all presentation services that should be included in this executable.
+        // All required services will be then be deduced from the dependency graph.
+        presentation {
+            type "rest"
+        }
     }
 
     // You can choose one of the supported generators for your executable.
     generator go {
+        version "1.17"
 
         // More configuration depends on the chosen generator.
         // This generator could have options for generating a Makefile that can build
@@ -44,7 +51,7 @@
         // A Go dependency only needs the path and a version.
         dependency {
             name "github.com/google/uuid"
-            version "1.0.0"
+            version "latest"
         }
 
         // This is an exemplary Java dependency, which would need to be placed in a Java

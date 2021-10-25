@@ -1,0 +1,34 @@
+= supportiety_server
+
+All bounded contexts will be summarized here.
+
+
+== files
+Types:  No types defined. 
+
+=== User Stories
+
+No user stories for this bounded context.
+
+
+
+== iam
+Types:  No types defined. 
+
+=== User Stories
+
+No user stories for this bounded context.
+
+
+
+== ticket
+Types: TicketBase, TicketCreate, TicketShow, TicketById, SpecialThing, User, UserById, 
+
+=== User Stories
+
+* ticket_close: Close support ticket
+    
+* ticket_create: Create support ticket
+    
+
+

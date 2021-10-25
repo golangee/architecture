@@ -4,11 +4,29 @@ import (
 	"encoding/json"
 	"log"
 	"os"
+	"path/filepath"
 	"testing"
 )
 
 func TestLoadValidateDomain(t *testing.T) {
-	domain, err := LoadDomain("../testdata/supportiety")
+	inputFolder, err := filepath.Abs("../testdata/supportiety")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	outputFolder, err := filepath.Abs("../testdata/supportiety_render")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// Delete old outputFolder before doing anything
+	err = os.RemoveAll(outputFolder)
+	if err != nil {
+		t.Fatal(err)
+	}
+	log.Println("🗑 Deleted old render directory")
+
+	domain, err := LoadDomain(inputFolder)
 	if err != nil {
 		t.Fatalf("%+v\n", err)
 	} else {
@@ -24,17 +42,17 @@ func TestLoadValidateDomain(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	log.Println("✅ LoadDomain ok")
+	log.Println("📚 LoadDomain ok")
 
 	err = domain.Validate(domain)
 	if err != nil {
 		t.Fatal(err)
 	}
-	log.Println("✅ Validate ok")
+	log.Println("🔍 Validate ok")
 
-	err = domain.Executables[0].Render(domain, "../testdata/supportiety_render")
+	err = domain.Executables[0].Render(domain, outputFolder)
 	if err != nil {
 		t.Fatal(err)
 	}
-	log.Println("✅ Render ok")
+	log.Println("✏️ Render ok")
 }
