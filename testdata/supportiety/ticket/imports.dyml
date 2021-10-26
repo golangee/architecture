@@ -1,0 +1,18 @@
+// import is used to import things from libraries.
+#! import @name="UUID" {
+    java {
+        // In Java the type is completely resolved by the path.
+        import "com.company.uuid.UUID"
+    }
+    go {
+        // In Go we need the import path and the type name.
+        import "github.com/google/uuid"
+        type "UUID"
+    }
+    rust {
+        // In Rust the type can be completely resolved by path.
+        // Additional features might be enabled here.
+        import "uuid::Uuid"
+        features "v4"
+    }
+}

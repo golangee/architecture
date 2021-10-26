@@ -1,0 +1,85 @@
+// Filenames don't matter, everything in the folder for a bounded context (BC)
+// belongs to that, subdirectories are packages.
+// Everything directly in the folder for the BC belongs to the unnamed root package.
+
+// Reference resolving ideas:
+// Specifying an identifier without dots, like "Thing", will look for that thing in the current
+// package in the current BC.
+// An identifier with any amount of dots is expected to be fully qualified. It starts with the name of the BC
+// and ends with the name of the referenced type. Between those any number of package names may occur.
+// "iam.User" is a reference to "User" in BC "iam".
+// "files.store.ipfs.meta.Config" is a reference to the "Config" that can be found in the BC "files"
+// in the sub-package "store.ipfs.meta".
+
+#! service @name="View" {
+    type "application"
+
+    use "files.Persistence"
+
+    methods {
+        // An architecture-builtin "list" can be used to
+        // mark any type as an array/list/slice/vec (whatever is more
+        // idiomatic in the target language) of that type.
+        ListAll() -> list<TicketShow>
+    }
+}
+
+#! service @name="Manage" {
+    type "usecase"
+
+    use "files.Persistence"
+
+    // Methods are all methods that this services provides.
+    // There are some keywords defined for the return types,
+    // which can more precisely define the business logic.
+    // A plain type indicates that a concrete instance is returned,
+    // and not null (or equivalent).
+    // "maybe" is the given type or null (or equivalent).
+    // "either" is exactly one of the provided types.
+    // These concepts can then be transpiled to more idiomatic
+    // patterns of the target language, e.g. "maybe<Type>" would
+    // be a nullable pointer "*Type" in Go, an "Option<Type>" in Rust,
+    // and an "Optional<Type>" in Java.
+
+    methods {
+        ## Create a new ticket.
+        @@story="ticket_create"
+        Create(TicketCreate) -> either<TicketShow, CreateError>
+
+        ## Close the ticket with the given id.
+        @@story="ticket_close"
+        Close(TicketById) -> maybe<CloseError>
+
+        ## Assign a ticket to be edited by the given user.
+        // This method does not have a story attached to it and would fail
+        // validation, because it has no reason to exist.
+        Assign(TicketById, UserById) -> maybe<AssignError>
+    }
+}
+
+#story @name{ticket_close} {
+    #title     Close support ticket
+    #as_a      Supporter
+    #i_want_to close user tickets once they have been handled
+    #so_that   the now old ticket no longer shows up in our backlog.
+}
+
+#story @name{ticket_create} {
+    #title     Create support ticket
+    #as_a      User
+    #i_want_to create new support tickets
+    #so_that   I get help from the support team
+
+    #accept {
+        #require a wdy app crashed or has an unexpected error that is displayed in a popup
+        #when    the user clicks a button to submit the error
+        #then    the error will be sent to the server
+        #then    a support ticket ID will be displayed
+    }
+
+    #accept {
+        #require a wdy app crashed or has an unexpected error that is displayed
+        #when    the user does not want to submit the error
+        #then    the error message disappears
+    }
+}

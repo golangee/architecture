@@ -1,0 +1,71 @@
+// Executables bundle a selection of services from different bounded contexts together to
+// create a sensible application.
+#! executable supportiety_server {
+
+    license "Apache-2.0"
+
+    // The architecture node describes how services inside the executable are interacting.
+    architecture {
+
+        // There are different architectural models you can choose for your project.
+        // Currently a 4-layer architecture is the only supported one.
+        // In this one, each service will be one of four types:
+        // presentation -> usecase -> domain <- adapter
+        // The arrows represent required knowledge and are not transitive.
+        // The presentation layer needs to know about the usecase layer,
+        // usecase and adapter layers need to know about the domain.
+        // The domain encapsulates the core knowledge about the business logic
+        // and does not need to know anything else.
+        type "4layer"
+
+        // Each service specifies how it interacts with other services.
+        // When we try to run the generator, it will check if dependencies
+        // between services are well-behaved, e.g. no presentation service accesses
+        // an adapter service directly.
+        // For other architectural models, the names and rules for interaction will be different.
+
+        // Layer specific settings could work like this. Here we set all presentation services up
+        // to be HTTP servers that provide a rest-API.
+        // We also need to specify all presentation services that should be included in this executable.
+        // All required services will be then be deduced from the dependency graph.
+        presentation {
+            type "rest"
+        }
+    }
+
+    // You can choose one of the supported generators for your executable.
+    generator go {
+        version "1.17"
+
+        // More configuration depends on the chosen generator.
+        // This generator could have options for generating a Makefile that can build
+        // binaries for different architectures.
+        // build {
+        //     darwin "amd64"
+        //     darwin "arm64"
+        //     linux  "amd64"
+        //}
+
+        // Every generator needs to know how to resolve the types that were imported
+        // from libraries.
+        // A Go dependency only needs the path and a version.
+        dependency {
+            name "github.com/google/uuid"
+            version "latest"
+        }
+
+        // This is an exemplary Java dependency, which would need to be placed in a Java
+        // generator. Java dependencies (from Gradle) need more stuff.
+        // dependency {
+        //     version "1.0.0"
+        //     group "com.company"
+        //     repo "maven"
+        // }
+
+        // An finally an example of how a Rust dependency might look.
+        // dependency {
+        //     name "uuid"
+        //     version "1.0.0"
+        // }
+    }
+}

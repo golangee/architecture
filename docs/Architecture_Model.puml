@@ -1,0 +1,145 @@
+@startuml Architecture_Model
+
+skinparam {
+    wrapWidth 150
+}
+
+interface Validator {
+    + Validate(*Domain): error
+}
+note left
+    Implemented by all model types. A reference to the domain is given so that validations that need access to another part of the tree can be completed.
+end note
+
+class Type {
+    + T: string
+}
+note left
+    Type defines a data type that is either a primitive type or a reference to another DTO by name.
+end note
+
+class PString {
+    + S: string
+    + File: string
+    + Pos: token.Pos
+}
+note left
+    A PString wraps a string with information from where this string was extracted.
+end note
+
+' Some hidden arrows to lay out the lonely types.
+Validator -[hidden]-> PString
+PString -[hidden]-> Type
+
+class Domain {
+    + Name: PString
+    + ArcVersion: PString
+    + Description: PString
+}
+Domain *- "1\n+Glossary" Glossary
+Domain *-- "1..*\n+BoundedContexts" BoundedContext
+Domain *-- "1..*\n+Executables" Executable
+
+class BoundedContext {
+    + Name: PString
+    + Description: PString
+}
+BoundedContext *-- "1\n+License" License
+BoundedContext *-- "1\n+Authors" Authors
+BoundedContext *-- "1..*\n+Stories" Story
+BoundedContext *- "1\n+Glossary" Glossary
+BoundedContext *-- "1\n+Core" Package
+BoundedContext *-- "*\n+Usecases" Package
+
+class Package {}
+Package *-[norank]- "1..*\n+Services" Service
+
+class Authors {}
+Authors *-- "1..*\n+Authors" Author
+
+class Author {
+    + Name: PString
+    + Mail: PString
+}
+
+class License {
+    + Name: PString
+}
+
+class Glossary {
+    +Definitions: map[string]PString
+}
+
+class Story {
+    + Id: int
+    + Title: PString
+    + AsA: PString
+    + IWantTo: PString
+    + SoThat: PString
+}
+Story *-- "1..*" AcceptCriterion
+
+class AcceptCriterion {
+    + Require: []PString
+    + When: []PString
+    + Then: []PString
+}
+
+class GeneratorSelection {}
+GeneratorSelection *-- "0..1\n+Go" GoGenerator
+GeneratorSelection *-- "0..1\n+Android" AndroidGenerator
+
+class GoGenerator {
+    + Package: PString
+}
+GoGenerator *-- "1\n+Build" DesktopBuild
+GoGenerator *-- "*\n+Dependencies" DependencyDefinition
+
+class DependencyDefinition {
+    + Id: PString
+    + Name: PString
+    + Version: PString
+}
+
+class DesktopBuild {
+    + Darwin: []PString
+    + Linux: []PString
+}
+
+class DTO {
+    + Name: PString
+    + Viewing: PString
+    + Fields: map[string]Type
+}
+
+class Error {
+    + Name: PString
+    + Variants: []PString
+}
+
+class Service {
+    + Name: PString
+    + ServiceDependencies: []PString
+    + LibDependencies: []PString
+}
+Service *-- "1..*\n+Methods" Method
+Service *- "1\n+Type" ServiceType
+Service *-- "*\n+Objects" DTO
+Service *-- "*\n+Errors" Error
+
+enum ServiceType {
+    + Core
+    + IO
+}
+
+class Method {
+    + Story: string
+    + Params: map[PString]Type
+    + Result: map[PString]Type
+}
+
+class Executable {}
+Executable --> "1..*\n+Services" Service
+Executable *- "1\n+Generators" GeneratorSelection
+
+@enduml
