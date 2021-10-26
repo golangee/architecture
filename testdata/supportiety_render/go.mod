@@ -1,5 +1,7 @@
-go 1.17
+module github.com/golangee/architecture/testdata/supportiety_render/supportiety
 
-module supportietyServer
+go 1.16
 
-require github.com/google/uuid latest
+require (
+	github.com/golangee/log latest
+)

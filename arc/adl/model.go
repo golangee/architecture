@@ -18,6 +18,7 @@ func NewProject(name, comment string) *Project {
 	return &Project{
 		Name:    traceStr(name),
 		Comment: traceStr(comment),
+		Glossary: NewGlossary(),
 	}
 }
 

@@ -21,6 +21,10 @@ type PString struct {
 	Range token.Position
 }
 
+func (p *PString) Trimmed() string {
+	return strings.TrimSpace(p.Value)
+}
+
 func (p *PString) UnmarshalDyml(node *parser.TreeNode) error {
 	if len(node.Children) == 0 {
 		return token.NewPosError(node.Range, "expected a string")
