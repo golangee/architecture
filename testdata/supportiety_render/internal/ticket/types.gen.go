@@ -1,4 +1,4 @@
-package main
+package ticket
 
 import uuid "github.com/google/uuid"
 

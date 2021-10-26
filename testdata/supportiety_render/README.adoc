@@ -1,4 +1,5 @@
 = supportiety_server
+_Generated with prototype version 0.0.1 of https://github.com/golangee/architecture_
 
 All bounded contexts will be summarized here.
 
@@ -8,8 +9,7 @@ Types:  No types defined.
 
 === User Stories
 
-No user stories for this bounded context.
-
+No user stories.
 
 
 == iam
@@ -17,8 +17,7 @@ Types:  No types defined.
 
 === User Stories
 
-No user stories for this bounded context.
-
+No user stories.
 
 
 == ticket
@@ -27,8 +26,7 @@ Types: TicketBase, TicketCreate, TicketShow, TicketById, SpecialThing, User, Use
 === User Stories
 
 * ticket_close: Close support ticket
-    
+
 * ticket_create: Create support ticket
-    
 
 

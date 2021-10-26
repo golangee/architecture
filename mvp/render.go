@@ -14,20 +14,16 @@ import (
 
 const DefaultFileMode = 0755
 
-const MainDocFileTemplate = `%s
-
-(Generated with prototype version %v of github.com/golangee/architecture)
-
-%s
-`
-
-const MakefileTemplate = `run: tidy
-	go run main.go
+const MakefileTemplate = `build: tidy
+	go build cmd/{{.Name.Value}}.go
+run: build
+	./{{.Name.Value}}
 tidy:
 	go mod tidy
 `
 
 const ReadmeTemplate = `= {{.Executable.Name.Value}}
+_Generated with prototype version {{trim .Domain.ArcVersion.V.Value}} of https://github.com/golangee/architecture_
 
 All bounded contexts will be summarized here.
 
@@ -37,49 +33,68 @@ Types: {{range .DTOs}}{{.Name.Value}}, {{else}} No types defined. {{end}}
 
 === User Stories
 {{range .Stories}}
-* {{.Name}}: {{.Title.Value -}}
+* {{.Name}}: {{trim .Title.Value}}
 {{else}}
-No user stories for this bounded context.
+No user stories.
 {{end}}
-
 {{end}}
 `
+
+var templateUtilFunctions template.FuncMap
 
 // Render creates a project that's ready to run for this domain into the given folder.
 // No validation is run here, so you might want to call Validate on the domain before
 // running this.
 func (e *Executable) Render(domain *Domain, folder string) error {
-	err := os.MkdirAll(folder, DefaultFileMode)
+	templateUtilFunctions = template.FuncMap{
+		"trim": strings.TrimSpace,
+	}
+
+	folderAbs, err := filepath.Abs(folder)
 	if err != nil {
 		return err
 	}
 
-	err = e.renderMainDocFile(folder, domain)
+	err = os.MkdirAll(folderAbs, DefaultFileMode)
 	if err != nil {
 		return err
 	}
 
-	err = e.renderModFile(folder)
+	err = e.renderModFile(folderAbs)
 	if err != nil {
 		return err
 	}
 
-	err = e.renderMakefile(folder)
+	err = e.renderMakefile(folderAbs)
 	if err != nil {
 		return err
 	}
 
-	err = e.renderLicense(folder)
+	err = e.renderLicense(folderAbs)
 	if err != nil {
 		return err
 	}
 
-	err = e.renderTypes(folder, domain)
+	err = e.renderReadme(folderAbs, domain)
 	if err != nil {
 		return err
 	}
 
-	err = e.renderReadme(folder, domain)
+	for _, bc := range domain.BoundedContexts {
+		bcFolder := filepath.Join(folderAbs, "internal", bc.Name)
+
+		err = os.MkdirAll(bcFolder, DefaultFileMode)
+		if err != nil {
+			return err
+		}
+
+		err = e.renderBoundedContext(bcFolder, &bc, domain)
+		if err != nil {
+			return err
+		}
+	}
+
+	err = e.renderMain(folder, domain)
 	if err != nil {
 		return err
 	}
@@ -87,42 +102,106 @@ func (e *Executable) Render(domain *Domain, folder string) error {
 	return nil
 }
 
-// renderTypes renders all types into a single file.
-// That's okay because types should (probably) never be edited directly.
-func (e *Executable) renderTypes(folder string, domain *Domain) error {
-	// Emit file containing all types
-	types := jen.NewFile("main")
-	for _, bc := range domain.BoundedContexts {
-		for _, dto := range bc.DTOs {
-			var fields []jen.Code
+// renderMain generates an entrypoint for this application in the folder "<folder>/cmd/<execname>"
+func (e *Executable) renderMain(folder string, domain *Domain) error {
+	applicationFolder := filepath.Join(folder, "cmd")
 
-			for _, parameter := range dto.Parameters {
-				name := strings.TrimSpace(parameter.Name.Value)
-				comment := strings.TrimSpace(parameter.Description)
-				typ := strings.TrimSpace(parameter.Type.Value)
+	err := os.Mkdir(applicationFolder, DefaultFileMode)
+	if err != nil {
+		return err
+	}
 
-				resolved := bc.ResolveType(domain, typ)
+	main := jen.NewFile("main")
+	main.Func().Id("main").Params().Block(
+		jen.Qual("fmt", "Println").Call(jen.Lit("Hello generator!")),
+	)
 
-				if len(comment) > 0 {
-					fields = append(fields, jen.Comment(comment))
-				}
-				switch r := resolved.(type) {
-				case *DTO:
-					fields = append(fields, jen.Id(name).Id(typ))
-				case *TypeImport:
-					fields = append(fields, jen.Id(name).Qual(r.Go.Import.Value, r.Go.Type.Value))
-				default:
-					// Emit type name as is, hoping that it is a native type.
-					// TODO Ideally a translation from abstract arc-types to language specific types would happen here.
-					fields = append(fields, jen.Id(name).Id(typ))
-				}
-			}
+	mainFile, err := os.Create(filepath.Join(applicationFolder, fmt.Sprintf("%s.go", e.Name.Value)))
+	if err != nil {
+		return err
+	}
+	defer mainFile.Close()
 
-			types.Type().Id(dto.Name.Value).Struct(fields...)
+	err = main.Render(mainFile)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// renderBoundedContext renders the given BoundedContext into the folder.
+func (e *Executable) renderBoundedContext(folder string, bc *BoundedContext, domain *Domain) error {
+	err := e.renderTypes(folder, bc, domain)
+	if err != nil {
+		return err
+	}
+
+	err = e.renderServices(folder, bc, domain)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// renderServices renders all services for a BoundedContext.
+func (e *Executable) renderServices(folder string, bc *BoundedContext, domain *Domain) error {
+	for _, serviceDefinition := range bc.Services {
+		serviceName := strings.TrimSpace(serviceDefinition.Name)
+		serviceFileName := filepath.Join(folder, fmt.Sprintf("%s.go", strcase.ToSnake(serviceName)))
+
+		serviceFile, err := os.Create(serviceFileName)
+		if err != nil {
+			return err
+		}
+
+		service := jen.NewFile(bc.Name)
+		service.Type().Id(serviceName).Struct()
+
+		err = service.Render(serviceFile)
+		if err != nil {
+			return err
 		}
 	}
 
-	typesFile, err := os.Create(filepath.Join(folder, "types.go"))
+	return nil
+}
+
+// renderTypes renders all types for a BoundedContext into a single file.
+// That's okay because types should (probably) never be edited directly.
+func (e *Executable) renderTypes(folder string, bc *BoundedContext, domain *Domain) error {
+	types := jen.NewFile(bc.Name)
+
+	for _, dto := range bc.DTOs {
+		var fields []jen.Code
+
+		for _, parameter := range dto.Parameters {
+			name := strings.TrimSpace(parameter.Name.Value)
+			comment := strings.TrimSpace(parameter.Description)
+			typ := strings.TrimSpace(parameter.Type.Value)
+
+			resolved := bc.ResolveType(domain, typ)
+
+			if len(comment) > 0 {
+				fields = append(fields, jen.Comment(comment))
+			}
+			switch r := resolved.(type) {
+			case *DTO:
+				fields = append(fields, jen.Id(name).Id(typ))
+			case *TypeImport:
+				fields = append(fields, jen.Id(name).Qual(r.Go.Import.Value, r.Go.Type.Value))
+			default:
+				// Emit type name as is, hoping that it is a native type.
+				// TODO Ideally a translation from abstract arc-types to language specific types would happen here.
+				fields = append(fields, jen.Id(name).Id(typ))
+			}
+		}
+
+		types.Type().Id(dto.Name.Value).Struct(fields...)
+	}
+
+	typesFile, err := os.Create(filepath.Join(folder, "types.gen.go"))
 	if err != nil {
 		return err
 	}
@@ -144,7 +223,7 @@ func (e *Executable) renderReadme(folder string, domain *Domain) error {
 	}
 	defer readme.Close()
 
-	readmeTemplate, err := template.New("readme").Parse(ReadmeTemplate)
+	readmeTemplate, err := template.New("readme").Funcs(templateUtilFunctions).Parse(ReadmeTemplate)
 	if err != nil {
 		return fmt.Errorf("bug: invalid template for README: %w", err)
 	}
@@ -189,9 +268,14 @@ func (e *Executable) renderMakefile(folder string) error {
 		return fmt.Errorf("failed to create Makefile: %w", err)
 	}
 
-	_, err = makefile.WriteString(fmt.Sprintf(MakefileTemplate))
+	temp, err := template.New("Makefile").Funcs(templateUtilFunctions).Parse(MakefileTemplate)
 	if err != nil {
-		return fmt.Errorf("failed to write Makefile: %w", err)
+		return fmt.Errorf("invalid Makefile template: %w", err)
+	}
+
+	err = temp.Execute(makefile, e)
+	if err != nil {
+		return fmt.Errorf("could not execute template: %w", err)
 	}
 
 	return nil
@@ -234,24 +318,6 @@ func (e *Executable) renderModFile(folder string) error {
 	defer modFile.Close()
 
 	_, err = modFile.Write(bytes)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (e *Executable) renderMainDocFile(folder string, domain *Domain) error {
-	doc := jen.NewFile("main")
-	doc.PackageComment(fmt.Sprintf(MainDocFileTemplate, strings.TrimSpace(domain.Name.Value), strings.TrimSpace(domain.ArcVersion.V.Value), domain.Description.Value))
-
-	docF, err := os.Create(filepath.Join(folder, "doc.go"))
-	if err != nil {
-		return err
-	}
-	defer docF.Close()
-
-	err = doc.Render(docF)
 	if err != nil {
 		return err
 	}
